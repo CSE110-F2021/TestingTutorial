@@ -23,7 +23,7 @@ The underlying HTML DOM tree and web components are as follows:
 
 <br/>
 
-## Part 3: Writing Cypress Tests
+## Part 1: Writing Cypress Tests
 ### Opening the Page
 Make sure that Cypress finds the correct `index.html` path and can visit the site hosted by LiveServer.
 ```javascript
@@ -210,6 +210,14 @@ it('Button toggles when Start clicked', () => {
 });
 ```
 
+<br/>
+
+## Part 2: Writing Jest Tests
+TBD
+<br/>
+
+## Part 3: Running Jest Tests
+TBD
 <br/>
 
 ## Part 4: Running Cypress Tests
