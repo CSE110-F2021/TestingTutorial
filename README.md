@@ -26,6 +26,14 @@ The underlying HTML DOM tree and web components are as follows:
 ## Part 1: Writing Cypress Tests
 ### Opening the Page
 Make sure that Cypress finds the correct `index.html` path and can visit the site hosted by LiveServer.
+The below assumes that we have a file breakdown like:
+
+```
+source/
+   index.html
+README.md
+```
+
 ```javascript
 describe("Open Page", () => {
     it("Opens index.html", () => {
@@ -35,6 +43,15 @@ describe("Open Page", () => {
 ``` 
 ### Referencing Components & Elements
 Finding a component that is a shadow DOM (like `pomo-timer`):
+In lab 6, we created a `RecipeCard` custom component. This `pomo-timer` component is
+no different and can be defined similarly.
+```js
+  class pomoTimer extends HTMLElement {
+    constructor() {}
+  } 
+  customElements.define('pomo-timer', pomoTimer);
+```
+To check that the pomo timer exists in the window, we can test:
 ```js
 describe('Find Timer Element with JS', () => {
   it('Get element (\'Timer\')', () => {
@@ -60,7 +77,7 @@ Finding an element by ID (use a *unique* ID like `timer-button` not `button`):
 ```js
 describe('Find Elements', { includeShadowDom: true }, () => {
     it('Get element X', () => {
-        cy.get('#id-name');
+        cy.get('#id-name');   // cy.get('#timer-button');
     });
 });
 ```
@@ -78,6 +95,9 @@ describe('Find Elements', { includeShadowDom: true }, () => {
 ### Calling Functions
 If working with a shadow DOM component, use `cy.window` and `win.component.function()`:
   - **Note**: if this element belongs to a shadow DOM, make sure to include `{includeShadowDom: true}`
+Assume that we have a function `setTimer()` in our pomo timer custom component (prototype defined below).
+To call that function, we pass in certain values. You can also add a subsequent check to see if the
+window changed in an expected fashion.
 
 ```js
 // function setTimer(min, mode) {}
@@ -88,7 +108,7 @@ it('Call setTimer() to set work mode', () => {
 });
 ```
 
-If NOT working with shadow DOMs (e.g. `storage.js`), use `export` in the component JS file and `import` in the Cypress test file:
+If NOT working with shadow DOMs (e.g. local storage file `storage.js`), use `export` in the component JS file and `import` in the Cypress test file:
 ```js
 // storage.js
 export function helloWorld(hi) { return hi + " " + "World"; }
@@ -105,6 +125,7 @@ cy
 
 ### Checking Variables
 If working with shadow DOM (e.g. `pomo-timer`) to check a `this.variable`:
+Assume that we have a global variable `totalSeconds` and we want to confirm its value.
 ```js
 it('Check that total seconds is accurate', () => {
   cy.window().then((win) => {
@@ -171,7 +192,8 @@ it('Set Timer for Long Break #1 after listening for Work #4 end', () => {
 ```
 
 ### Comparing Text/Labels
-Check text/labels by content
+Check text/labels by content. In this case, we want to see that the element with the ID
+`timer-mode` has the text `'WORK'`.
 ```js
 it('Mode should be \'Work\'', () => {
   cy.get('#timer-mode').then(($el) => {
